@@ -3,7 +3,7 @@ import logging
 import time
 
 
-from confluent_kafka import avro
+from confluent_kafka import avro, KafkaException
 from confluent_kafka.admin import AdminClient, NewTopic
 from confluent_kafka.avro import AvroProducer
 
@@ -36,11 +36,14 @@ class Producer:
         # TODO: Configure the broker properties below. Make sure to reference the project README
         # and use the Host URL for Kafka and Schema Registry!
         #
-        #
+        # done?
         self.broker_properties = {
             # TODO
             # TODO
             # TODO
+            'auto.offset.reset': 'earliest',
+            'bootstrap.servers': 'PLAINTEXT://localhost:9092',
+            'schema.registry.url': 'http://localhost:8081'
         }
 
         # If the topic does not already exist, try to create it
@@ -48,9 +51,12 @@ class Producer:
             self.create_topic()
             Producer.existing_topics.add(self.topic_name)
 
-        # TODO: Configure the AvroProducer
-        # self.producer = AvroProducer(
-        # )
+        # TODO: Configure the AvroProducer. done?
+        self.producer = AvroProducer(
+            self.broker_properties,
+            default_key_schema=self.key_schema,
+            default_value_schema=self.value_schema
+        )
 
     def create_topic(self):
         """Creates the producer topic if it does not already exist"""
@@ -59,11 +65,23 @@ class Producer:
         # TODO: Write code that creates the topic for this producer if it does not already exist on
         # the Kafka Broker.
         #
-        #
-        logger.info("topic creation kafka integration incomplete - skipping")
+        # done?
+        try:
+            if self.topic_name not in AdminClient.list_topics().topics:
+                NewTopic(
+                    self.topic_name,
+                    num_partitions=self.num_partitions, 
+                    replication_factor=self.num_replicas
+                )
+                logger.info(f'Created topic {self.topic_name}')
+            else:
+                logger.info(f'Topic already exists: {self.topic_name}. Did not create topic')
+        except KafkaException as e:
+            logger.error(f'KafkaException occurred when listing and creating topic: {e.message}')
 
-    def time_millis(self):
-        return int(round(time.time() * 1000))
+    # This is a duplicate implementation?
+#     def time_millis(self):
+#         return int(round(time.time() * 1000))
 
     def close(self):
         """Prepares the producer for exit by cleaning up the producer"""
@@ -71,8 +89,9 @@ class Producer:
         #
         # TODO: Write cleanup code for the Producer here
         #
-        #
-        logger.info("producer close incomplete - skipping")
+        # done?
+        self.producer.flush()
+        logger.info("Flushed the producer in preparation for closing")
 
     def time_millis(self):
         """Use this function to get the key for Kafka Events"""
