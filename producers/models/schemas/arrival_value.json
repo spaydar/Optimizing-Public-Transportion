@@ -1,6 +1,7 @@
 {
+    "namespace": "com.udacity",
     "type": "record",
-    "name": "arrival_value",
+    "name": "arrival.value",
     "fields": [
         {
             "name": "station_id",
