@@ -102,9 +102,13 @@ class Weather(Producer):
                    # DONE: Provide key schema, value schema, and records
                    #
                    #
+                   'key_schema': Weather.key_schema,
                    'value_schema': Weather.value_schema,
                    'records': [
                        {
+                           'key': {
+                               'timestamp': self.time_millis()
+                           },
                            'value': {
                                'temperature': self.temp,
                                'status': self.status
