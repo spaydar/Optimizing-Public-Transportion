@@ -62,24 +62,25 @@ class Station(Producer):
         # TODO: Complete this function by producing an arrival message to Kafka
         #
         #
-        logger.info("arrival kafka integration incomplete - skipping")
+        arrival_value_obj = {
+            #
+            #
+            # DONE: Configure this
+            #
+            #
+            'station_id': self.station_id,
+            'train_id': train.train_id,
+            'direction': direction,
+            'line': self.color.name,
+            'train_status': train.status.name,
+            'prev_station_id': prev_station_id,
+            'prev_direction': prev_direction
+        }
+        logger.info(f"Producing arrival message for station: {arrival_value_obj}")
         self.producer.produce(
            topic=self.topic_name,
            key={"timestamp": self.time_millis()},
-           value={
-               #
-               #
-               # DONE: Configure this
-               #
-               #
-               'station_id': self.station_id,
-               'train_id': train.train_id,
-               'direction': direction,
-               'line': self.color.name,
-               'train_status': train.status.name,
-               'prev_station_id': prev_station_id,
-               'prev_direction': prev_direction
-           },
+           value=arrival_value_obj,
             # the schema params are in the docs, not starter code. not sure if needed
             #key_schema=Station.key_schema,
             #value_schema=Station.value_schema
