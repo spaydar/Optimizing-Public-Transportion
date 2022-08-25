@@ -2,7 +2,7 @@
 import logging
 
 import confluent_kafka
-from confluent_kafka import Consumer
+from confluent_kafka import Consumer, OFFSET_BEGINNING
 from confluent_kafka.avro import AvroConsumer
 from confluent_kafka.avro.serializer import SerializerError
 from tornado import gen
@@ -97,9 +97,9 @@ class KafkaConsumer:
         try:
             message = self.consumer.poll(timeout=self.consume_timeout)
             if message:
-                logger.info(f'Message returned by consumer.poll. Consuming message: {message.value()}')
+                logger.info(f'Message returned by consumer.poll. Consumed message: {message.value()}')
                 try:
-                    self.consumer.consume(timeout=self.consume_timeout)
+                    self.message_handler(message)
                     return 1
                 except Exception as e:
                     logger.error(f'Error occurred when consuming a message: {e}')
