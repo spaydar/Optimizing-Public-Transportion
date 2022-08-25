@@ -22,9 +22,9 @@ class Weather:
         #
         #
         try:
-            value = json.loads(message.value())
+            value = message.value()
             self.temperature = value['temperature']
             self.status = value['status']
             logger.info(f'Set weather: temperature {self.temperature}, status {self.status}')
         except Exception as e:
-            logger.error(f'Error parsing weather message to JSON: {e}')
+            logger.error(f'Error parsing message fields: {e}')
