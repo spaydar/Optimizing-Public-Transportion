@@ -97,7 +97,7 @@ class KafkaConsumer:
         try:
             message = self.consumer.poll(timeout=self.consume_timeout)
             if message:
-                logger.info(f'Message returned by consumer.poll. Consuming message: {message}')
+                logger.info(f'Message returned by consumer.poll. Consuming message: {message.value()}')
                 try:
                     self.consumer.consume(timeout=self.consume_timeout)
                     return 1
