@@ -66,8 +66,9 @@ class Producer:
         # the Kafka Broker.
         #
         # done?
+        admin_client = AdminClient({'bootstrap.servers': 'PLAINTEXT://localhost:9092'})
         try:
-            if self.topic_name not in AdminClient.list_topics().topics:
+            if self.topic_name not in admin_client.list_topics().topics:
                 NewTopic(
                     self.topic_name,
                     num_partitions=self.num_partitions, 
