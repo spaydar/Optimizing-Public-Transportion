@@ -65,6 +65,6 @@ class Turnstile(Producer):
         for _ in range(num_entries):
             self.producer.produce(
                 topic = self.topic_name,
-                key={'timestamp', self.time_millis() },
+                key={ 'timestamp': self.time_millis() },
                 value=turnstile_value_obj
             )
