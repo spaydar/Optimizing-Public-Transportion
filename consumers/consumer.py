@@ -104,10 +104,9 @@ class KafkaConsumer:
                     logger.error(f'Error occurred when consuming a message: {e}')
             else:
                 logger.info('No message returned by consumer.poll')
-                return 0
         except Exception as e:
             logger.error(f'Error occurred when polling for messages: {e}')
-
+        return 0
 
     def close(self):
         """Cleans up any open kafka consumers"""
