@@ -102,8 +102,8 @@ class Weather(Producer):
                    # DONE: Provide key schema, value schema, and records
                    #
                    #
-                   'key_schema': Weather.key_schema,
-                   'value_schema': Weather.value_schema,
+                   'key_schema': json.dumps(Weather.key_schema),
+                   'value_schema': json.dumps(Weather.value_schema),
                    'records': [
                        {
                            'key': {
@@ -111,17 +111,15 @@ class Weather(Producer):
                            },
                            'value': {
                                'temperature': self.temp,
-                               'status': self.status
+                               'status': self.status.name
                            }
                        }
                    ]
                }
            )
         )
-        try:
-            resp.raise_for_status()
-        except Exception as e:
-            logger.error(f'Failed to send message to REST Proxy: {json.dumps(resp.json(), indent=4)}. Exception: {e}')
+        logger.info(f'POST weather resp: {resp.json()}')
+        resp.raise_for_status()
 
         logger.debug(
             "sent weather data to kafka, temp: %s, status: %s",
